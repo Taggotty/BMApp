@@ -1,22 +1,21 @@
 package core;
 
-import java.beans.PropertyChangeListener;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 public abstract class Readable extends ChangeSupport implements Serializable {
 
-    private java.beans.PropertyChangeSupport pcs;
+    static final long serialVersionUID = -156184637345499177L;
+    private transient java.beans.PropertyChangeSupport pcs;
 
     private Boolean isRead;
     private String name;
     private Set<String> authors = new HashSet<String>() {
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            for(String author: authors)
+            for (String author : authors)
                 sb.append(author).append(";");
             return sb.toString();
         }
@@ -50,6 +49,10 @@ public abstract class Readable extends ChangeSupport implements Serializable {
 
     public void addAuthors(Collection<String> authors) {
         this.authors.addAll(authors);
+    }
+
+    public void removeAuthors(Collection<String> authors) {
+        this.authors.removeAll(authors);
     }
 
     public String getPublisher() {

@@ -8,8 +8,14 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import util.Util;
 
-public class BookViewController {
+import java.awt.event.ActionEvent;
+import java.util.logging.Level;
+
+import static util.Util.logger;
+
+public class ViewController {
 
     Book book;
 
@@ -32,10 +38,11 @@ public class BookViewController {
     protected void initialize() {
         cbOwnership.getItems().addAll(Ownership.State.values());
         cbOwnership.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            book.getOwnership().setState(newValue, null);
+            book.getOwnership().setState(newValue);
         }));
         cbRead.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             book.setRead(newValue);
+            logger.log(Level.FINE, "Set read of Book {0} to {1}", new Object[]{book, newValue});
         }));
         // tfAn.onKeyPressedProperty().addListener();
     }
@@ -50,7 +57,20 @@ public class BookViewController {
         cbOwnership.getSelectionModel().select(book.getOwnership().getState());
         if(book.getOwnership().getLend() != null)
             tfAn.setText(book.getOwnership().getLend());
+        else
+            tfAn.setText("");
 
+    }
+
+    @FXML
+    public void onLend() {
+        book.getOwnership().setLend(tfAn.getText());
+    }
+
+    @FXML
+    public void onDelete() {
+        book.getSeries().removeBook(book);
+        logger.log(Level.INFO, "Book removed successfully.");
     }
 
     public void setRead() {

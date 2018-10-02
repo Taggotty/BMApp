@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 public class SeriesContainer extends ChangeSupport<Series> implements Serializable {
+
+
+    private static final long serialVersionUID = 5969409675411119342L;
     private static SeriesContainer ourInstance;
     private ArrayList<Series> series = new ArrayList<>();
 

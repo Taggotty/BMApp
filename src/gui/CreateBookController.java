@@ -32,10 +32,6 @@ public class CreateBookController implements Controller {
         this.series = series;
     }
 
-    public CreateBookController() {
-        this.series = SingleSeries.getInstance();
-    }
-
     @FXML
     protected void initialize() {
         cbSeries.getItems().addAll(SeriesContainer.getInstance().getSeries());

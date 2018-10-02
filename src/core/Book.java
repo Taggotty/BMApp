@@ -1,6 +1,5 @@
 package core;
 
-import services.Share.TODOConnection;
 import services.Share.Taskable;
 
 import java.util.Collection;
@@ -38,7 +37,7 @@ public class Book extends Readable implements Taskable {
         }
     }
 
-    public Ownership getOwnership(){
+    public Ownership getOwnership() {
         return ownership;
     }
 

@@ -2,6 +2,7 @@ import core.Ownership;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class OwnershipTest {
 
@@ -12,20 +13,6 @@ public class OwnershipTest {
 
         // then
         assertEquals(Ownership.State.UNOWNED, ownership.getState());
-        assertEquals("", ownership.getLend());
-    }
-
-    @Test
-    public void setOwnershipLendFrom() {
-        // given
-        Ownership ownership = new Ownership();
-        String lend = "Philipp";
-
-        // when
-        ownership.setState(Ownership.State.LEND, lend);
-
-        // then
-        assertEquals(ownership.getState(), Ownership.State.LEND);
-        assertEquals(ownership.getLend(), lend);
+        assertNull(ownership.getLend());
     }
 }

@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 public class Ownership implements Serializable {
 
+    private static final long serialVersionUID = -7661351367355134140L;
     private State state;
     private String lend;
 
@@ -13,8 +14,11 @@ public class Ownership implements Serializable {
         this.state = State.UNOWNED;
     }
 
-    public void setState(State state, @Nullable String lend) {
+    public void setState(State state) {
         this.state = state;
+    }
+
+    public void setLend(String lend) {
         this.lend = lend;
     }
 

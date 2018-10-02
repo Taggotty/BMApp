@@ -1,15 +1,11 @@
 package gui;
 
-import core.Book;
-import core.Series;
-import core.SeriesContainer;
-import core.SingleSeries;
+import core.*;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.control.cell.CheckBoxTreeCell;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import services.Share.TODOConnection;
 import util.Util;
 
@@ -23,13 +19,11 @@ public class BookController implements PropertyChangeListener, Controller, DataC
     @FXML
     private TreeView<Object> dataView;
     @FXML
-    private VBox bookView;
-    @FXML
-    private  BookViewController bookViewController;
+    private ViewController viewController;
 
     @FXML
     public void onCreateBook() {
-        if(selected instanceof  Series)
+        if (selected instanceof Series)
             onCreateBook((Series) selected);
         else onCreateBook(null);
     }
@@ -66,19 +60,17 @@ public class BookController implements PropertyChangeListener, Controller, DataC
         for (Series s : seriesContainer.getSeries()) {
             s.addPropertyChangeListener(this);
         }
+        dataView.setRoot(new TreeItem<>("root"));
         setUpTreeView();
         dataView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             selected = newValue.getValue();
-            if(newValue.getValue() instanceof Book) {
-                bookViewController.setBook((Book) selected);
+            if (newValue.getValue() instanceof Book) {
+                viewController.setBook((Book) selected);
             }
         });
     }
 
     private void setUpTreeView() {
-        dataView.setRoot(new TreeItem<>("root"));
-        dataView.setCellFactory(CheckBoxTreeCell.<Object>forTreeView());
-
         for (Series s : seriesContainer.getSeries()) {
             if (s.equals(SingleSeries.getInstance())) {
                 handleListSingleBooks(s);
@@ -112,17 +104,22 @@ public class BookController implements PropertyChangeListener, Controller, DataC
         if (s == seriesContainer) {
             ((Series) evt.getNewValue()).addPropertyChangeListener(this);
             setUpTreeView();
-        } else if (s.getClass().equals(Series.class)) {
-            FilteredList<TreeItem<Object>> filteredList = dataView.getRoot().getChildren().filtered(ti -> ((Series) ti.getValue()).equals(s));
-            if (filteredList.size() == 1) {
-                TreeItem<Object> tiSeries = filteredList.get(0);
-                tiSeries.getChildren().add(new TreeItem<>(evt.getNewValue()));
-                dataView.refresh();
-
-            } else
-                throw new IndexOutOfBoundsException("Length of list should be 1");
-        } else if (s.getClass().equals(SingleSeries.class)) {
-            dataView.getRoot().getChildren().add(new TreeItem<>(evt.getNewValue()));
+        } else if (s instanceof Series) {
+            TreeItem<Object> tiSeries = dataView.getRoot();
+            if(!s.getClass().equals(SingleSeries.class)) {
+                FilteredList<TreeItem<Object>> filteredList = dataView.getRoot().getChildren().filtered(ti -> ti.getValue().equals(s));
+                assert filteredList.size() == 1;
+                tiSeries = filteredList.get(0);
+            }
+            switch (evt.getPropertyName()) {
+                case "addBook":
+                    tiSeries.getChildren().add(new TreeItem<>(evt.getNewValue()));
+                    dataView.refresh();
+                    break;
+                case "removeBook":
+                    tiSeries.getChildren().removeIf(ti -> ti.getValue().equals(evt.getNewValue()));
+                    break;
+            }
         }
     }
 }

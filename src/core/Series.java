@@ -1,15 +1,11 @@
 package core;
 
 import java.rmi.UnexpectedException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-public class Series extends Readable{
-
+public class Series extends Readable {
     private ArrayList<Book> books = new ArrayList<>();
 
     protected Series(String name) {
@@ -30,6 +26,15 @@ public class Series extends Readable{
             book.setSeries(this);
             addAuthors(book.getAuthors());
             fireEvent("addBook", book);
+        }
+    }
+
+    public void removeBook(Book book) {
+        if(contains(book)) {
+            books.remove(book);
+            Set<String> toBeRemovedAuthors = book.getAuthors().stream().filter(author -> books.stream().noneMatch(b -> b.getAuthors().contains(author))).collect(Collectors.toSet());
+            removeAuthors(toBeRemovedAuthors);
+            fireEvent("removeBook", book);
         }
     }
 
