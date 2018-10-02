@@ -7,7 +7,7 @@ import java.util.Set;
 
 public abstract class Readable extends ChangeSupport implements Serializable {
 
-    static final long serialVersionUID = -156184637345499177L;
+    private static final long serialVersionUID = -156184637345499177L;
     private transient java.beans.PropertyChangeSupport pcs;
 
     private Boolean isRead;

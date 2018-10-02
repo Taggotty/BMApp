@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="617.0"
-            prefWidth="936.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="gui.BookController">
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="617.0" prefWidth="936.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.BookController">
     <children>
         <BorderPane prefHeight="617.0" prefWidth="936.0">
             <top>
@@ -13,34 +19,36 @@
                     <items>
                         <SplitMenuButton mnemonicParsing="false" onAction="#onCreateBook" text="Neu...">
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#onCreateBook" text="Book"/>
-                                <MenuItem mnemonicParsing="false" onAction="#onCreateSingleBook" text="Einzelnes Buch"/>
-                                <MenuItem mnemonicParsing="false" onAction="#onCreateSeries" text="Reihe"/>
+                                <MenuItem mnemonicParsing="false" onAction="#onCreateBook" text="Book" />
+                                <MenuItem mnemonicParsing="false" onAction="#onCreateSeries" text="Reihe" />
                             </items>
                         </SplitMenuButton>
-                        <Button mnemonicParsing="false" onAction="#onConnect" text="Connect"/>
+                        <Button mnemonicParsing="false" onAction="#onConnect" text="Verbinde" />
                     </items>
                 </ToolBar>
             </top>
             <left>
-                <TreeView fx:id="dataView" depthTest="ENABLE" prefHeight="572.0"
-                          prefWidth="291.0" showRoot="false" BorderPane.alignment="CENTER">
+                <TreeView fx:id="dataView" depthTest="ENABLE" prefHeight="572.0" prefWidth="291.0" showRoot="false" BorderPane.alignment="CENTER">
                     <contextMenu>
                         <ContextMenu>
                             <items>
                                 <Menu mnemonicParsing="false" text="New">
                                     <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#onCreateSeries" text="Series..."/>
-                                        <MenuItem mnemonicParsing="false" onAction="#onCreateBook" text="Book..."/>
+                                        <MenuItem mnemonicParsing="false" onAction="#onCreateSeries" text="Series..." />
+                                        <MenuItem mnemonicParsing="false" onAction="#onCreateBook" text="Book..." />
                                     </items>
                                 </Menu>
+                        <MenuItem mnemonicParsing="false" onAction="#onDelete" text="Delete" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#onCollapseAll" text="Collapse All" />
+                        <MenuItem mnemonicParsing="false" onAction="#onExpandAll" text="Expand All" />
                             </items>
                         </ContextMenu>
                     </contextMenu>
                 </TreeView>
             </left>
             <center>
-                <fx:include source="ViewController.fxml" fx:id="view"/>
+                <fx:include fx:id="view" source="ViewController.fxml" />
             </center>
             <right>
 

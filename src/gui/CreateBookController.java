@@ -1,6 +1,5 @@
 package gui;
 
-import util.Util;
 import core.Book;
 import core.Series;
 import core.SeriesContainer;
@@ -10,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import util.Util;
 
 import java.util.Arrays;
 import java.util.Collection;

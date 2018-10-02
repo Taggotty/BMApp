@@ -15,7 +15,7 @@ import java.util.logging.Level;
 
 import static util.Util.logger;
 
-public class ViewController {
+public class ViewController extends DataManager{
 
     Book book;
 
@@ -67,17 +67,19 @@ public class ViewController {
         book.getOwnership().setLend(tfAn.getText());
     }
 
-    @FXML
-    public void onDelete() {
-        book.getSeries().removeBook(book);
-        logger.log(Level.INFO, "Book removed successfully.");
-    }
-
     public void setRead() {
 
     }
 
     public void setOwnership() {
+
+    }
+
+    public void onDelete() {
+        onDeleteBook(book);
+    }
+
+    public void onCreateBook(){
 
     }
 }

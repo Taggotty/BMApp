@@ -6,6 +6,8 @@ import java.util.Collection;
 
 public class Book extends Readable implements Taskable {
 
+    private static final long serialVersionUID = 1499152154520649807L;
+    private boolean shared = false;
     private Series series;
     private Ownership ownership = new Ownership();
 
@@ -41,10 +43,6 @@ public class Book extends Readable implements Taskable {
         return ownership;
     }
 
-    public void setOwnershipTo(Ownership ownership) {
-        this.ownership = ownership;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -54,6 +52,14 @@ public class Book extends Readable implements Taskable {
 
         if (!super.equals(book)) return false;
         return series != null ? series.equals(book.series) : book.series == null;
+    }
+
+    public boolean isShared() {
+        return shared;
+    }
+
+    public void setShared(boolean shared) {
+        this.shared = shared;
     }
 
     @Override

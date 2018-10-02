@@ -1,19 +1,19 @@
 package gui;
 
-import core.*;
+import core.Book;
+import core.Series;
+import core.SeriesContainer;
+import core.SingleSeries;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.HBox;
 import services.Share.TODOConnection;
-import util.Util;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.net.URL;
 
-public class BookController implements PropertyChangeListener, Controller, DataCreator {
+public class BookController extends DataManager implements PropertyChangeListener, Controller {
     public Object selected;
     private SeriesContainer seriesContainer;
     @FXML
@@ -29,23 +29,21 @@ public class BookController implements PropertyChangeListener, Controller, DataC
     }
 
     @FXML
-    @Override
-    public void onCreateSingleBook() {
-        onCreateBook(SingleSeries.getInstance());
+    public void onDelete() {
+        if(selected instanceof Series)
+            onDeleteSeries((Series) selected);
+        else if(selected instanceof Book)
+            onDeleteBook((Book) selected);
     }
 
     @FXML
-    @Override
-    public void onCreateSeries() {
-        URL resource = getClass().getResource("CreateSeriesController.fxml");
-        Util.createDialog("Create new Series", resource);
+    public void onCollapseAll() {
+        dataView.getRoot().getChildren().forEach(ti -> ti.setExpanded(false));
     }
 
-    @Override
-    public void onCreateBook(Series s) {
-        URL resource = getClass().getResource("CreateBookController.fxml");
-        CreateBookController controller = new CreateBookController(s);
-        Util.createDialogWithController("Create new Book", resource, controller);
+    @FXML
+    public void onExpandAll() {
+        dataView.getRoot().getChildren().forEach(ti -> ti.setExpanded(true));
     }
 
     @FXML
@@ -72,30 +70,13 @@ public class BookController implements PropertyChangeListener, Controller, DataC
 
     private void setUpTreeView() {
         for (Series s : seriesContainer.getSeries()) {
-            if (s.equals(SingleSeries.getInstance())) {
-                handleListSingleBooks(s);
-            } else {
-                handleListSeriesBooks(s);
+            TreeItem<Object> sItem = new TreeItem<>(s);
+            for (Book b : s.getBooks()) {
+                TreeItem<Object> bItem = new TreeItem<>(b);
+                sItem.getChildren().add(bItem);
             }
+            dataView.getRoot().getChildren().add(sItem);
         }
-    }
-
-    private void handleListSingleBooks(Series s) {
-        TreeItem<Object> sItem = dataView.getRoot();
-        for (Book b : s.getBooks()) {
-            TreeItem<Object> bItem = new TreeItem<>(b);
-            sItem.getChildren().add(bItem);
-        }
-    }
-
-    private void handleListSeriesBooks(Series s) {
-        TreeItem<Object> sItem = new TreeItem<>(s);
-        for (Book b : s.getBooks()) {
-            TreeItem<Object> bItem = new TreeItem<>(b);
-            sItem.getChildren().add(bItem);
-        }
-        dataView.getRoot().getChildren().add(sItem);
-
     }
 
     @Override
@@ -105,12 +86,10 @@ public class BookController implements PropertyChangeListener, Controller, DataC
             ((Series) evt.getNewValue()).addPropertyChangeListener(this);
             setUpTreeView();
         } else if (s instanceof Series) {
-            TreeItem<Object> tiSeries = dataView.getRoot();
-            if(!s.getClass().equals(SingleSeries.class)) {
-                FilteredList<TreeItem<Object>> filteredList = dataView.getRoot().getChildren().filtered(ti -> ti.getValue().equals(s));
-                assert filteredList.size() == 1;
-                tiSeries = filteredList.get(0);
-            }
+
+            FilteredList<TreeItem<Object>> filteredList = dataView.getRoot().getChildren().filtered(ti -> ti.getValue().equals(s));
+            assert filteredList.size() == 1;
+            TreeItem<Object> tiSeries = filteredList.get(0);
             switch (evt.getPropertyName()) {
                 case "addBook":
                     tiSeries.getChildren().add(new TreeItem<>(evt.getNewValue()));

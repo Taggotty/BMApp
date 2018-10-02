@@ -6,7 +6,7 @@ import java.beans.PropertyChangeSupport;
 
 public abstract class ChangeSupport<T> {
 
-    private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
