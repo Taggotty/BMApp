@@ -1,15 +1,21 @@
 package core;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class SingleSeries extends Series{
+public final class SingleSeries extends Series {
 
     private static SingleSeries instance = new SingleSeries();
 
 
     private SingleSeries() {
-        super("");
+        super("Einzelne Bücher");
+
+    }
+
+    public static SingleSeries getInstance() {
+        return instance;
     }
 
     @Override
@@ -17,9 +23,5 @@ public final class SingleSeries extends Series{
         List<String> author = new ArrayList<String>();
         author.add("");
         return author;
-    }
-
-    public static SingleSeries getInstance() {
-        return instance;
     }
 }

@@ -1,45 +1,30 @@
 package core;
 
-public class Book {
+import services.Share.TODOConnection;
+import services.Share.Taskable;
 
-    private String name;
-    private String author;
-    private String content;
+import java.util.Collection;
+
+public class Book extends Readable implements Taskable {
+
     private Series series;
+    private Ownership ownership = new Ownership();
 
-    public Book(String name, String author, Series series) {
-        this.name = name;
-        this.author = author;
+    public Book(String name, String publisher, String content, Collection<String> authors, Series series) {
+        super(name, publisher, content, authors);
+        setSeries(series);
     }
 
-    public Book(String name, String author) {
-        this.name = name;
-        this.author = author;
-
+    public Book(String name, String publisher, String content, Collection<String> authors) {
+        this(name, publisher, content, authors, SingleSeries.getInstance());
     }
 
-    public String getName() {
-        return name;
+    public Book(String name, String content, Series series) {
+        this(name, series.getPublisher(), content, series.getAuthors(), series);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public Book(String name, Series series) {
+        this(name, null, series);
     }
 
     public Series getSeries() {
@@ -47,10 +32,18 @@ public class Book {
     }
 
     public void setSeries(Series series) {
-        if(!series.equals(this.series)) {
+        if (!series.equals(this.series)) {
             this.series = series;
             series.addBook(this);
         }
+    }
+
+    public Ownership getOwnership(){
+        return ownership;
+    }
+
+    public void setOwnershipTo(Ownership ownership) {
+        this.ownership = ownership;
     }
 
     @Override
@@ -60,18 +53,23 @@ public class Book {
 
         Book book = (Book) o;
 
-        if (!name.equals(book.name)) return false;
-        if (!author.equals(book.author)) return false;
-        if (content != null ? !content.equals(book.content) : book.content != null) return false;
+        if (!super.equals(book)) return false;
         return series != null ? series.equals(book.series) : book.series == null;
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + author.hashCode();
-        result = 31 * result + (content != null ? content.hashCode() : 0);
+        int result = super.hashCode();
         result = 31 * result + (series != null ? series.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public void authorize() {
+    }
+
+    @Override
+    public void createTask() {
+
     }
 }

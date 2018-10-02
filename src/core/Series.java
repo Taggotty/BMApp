@@ -2,22 +2,22 @@ package core;
 
 import java.rmi.UnexpectedException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-public class Series {
+public class Series extends Readable{
 
     private ArrayList<Book> books = new ArrayList<>();
-    private String name;
 
-    public Series(String name) {
-        this.name = name;
+    protected Series(String name) {
+        this(name, null, null, Collections.emptySet());
     }
 
-    public List<String> getAuthors() {
-        return books.stream().map(Book::getName).collect(Collectors.toList());
+    public Series(String name, String publisher, String content, Collection<String> authors) {
+        super(name, publisher, content, authors);
     }
 
     public boolean contains(Book book) {
@@ -28,6 +28,8 @@ public class Series {
         if(!contains(book)) {
             books.add(book);
             book.setSeries(this);
+            addAuthors(book.getAuthors());
+            fireEvent("addBook", book);
         }
     }
 
@@ -47,13 +49,13 @@ public class Series {
         Series series = (Series) o;
 
         if (!books.equals(series.books)) return false;
-        return name.equals(series.name);
+        return super.equals(series);
     }
 
     @Override
     public int hashCode() {
         int result = books.hashCode();
-        result = 31 * result + name.hashCode();
+        result = 31 * result + super.hashCode();
         return result;
     }
 }
